@@ -2,6 +2,11 @@
 
 > **Next-Generation Autonomous Field-to-Office Inspection & Governance Service for Bentley Cloud Platform (iTwin & SYNCHRO)**
 
+[![GitHub Release](https://img.shields.io/github/v/release/hychenengineer/bentley-system-demo?style=flat-square&color=00C4B4)](https://github.com/hychenengineer/bentley-system-demo/releases/latest)
+[![Windows](https://img.shields.io/badge/Platform-Windows%20x64-blue?style=flat-square&logo=windows)](https://github.com/hychenengineer/bentley-system-demo/releases/download/v1.0.0/bentley-system-demo-win-x64.zip)
+
+📦 **[Download Standalone Windows App (.zip)](https://github.com/hychenengineer/bentley-system-demo/releases/download/v1.0.0/bentley-system-demo-win-x64.zip)** — *No .NET installation required. Extract and double-click `Start-Demo.bat` to launch on http://localhost:5088.*
+
 An intelligent, cloud-native form management and workflow execution service built to bridge the gap between **unstructured site reality** (noisy field voice dictations, mobile notes) and **rigid engineering data structures & regulatory state machines** (Bentley iTwin, SYNCHRO Field, and SYNCHRO Control).
 
 ---
