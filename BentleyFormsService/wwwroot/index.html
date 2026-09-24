@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bentley Cloud Platform — AI-Enabled Forms Service</title>
+  <link rel="stylesheet" href="styles.css?v=4" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="brand-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#00C4B4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 17L12 22L22 17" stroke="#00C4B4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 12L12 17L22 12" stroke="#00C4B4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-title">Bentley Cloud Platform</h1>
+        <span class="brand-subtitle">AI-Enabled Forms Service</span>
+      </div>
+    </div>
+
+    <!-- Persona Switcher Tabs -->
+    <nav class="persona-nav">
+      <button class="persona-tab active" id="btnPersonaField" onclick="switchPersona('field')">
+        <span class="persona-icon">📱</span>
+        <div>
+          <strong>Field Inspector</strong>
+          <small>SYNCHRO Field • Capture & Submit</small>
+        </div>
+      </button>
+      <button class="persona-tab" id="btnPersonaOffice" onclick="switchPersona('office')">
+        <span class="persona-icon">🖥️</span>
+        <div>
+          <strong>Office Admin & Lead</strong>
+          <small>SYNCHRO Control • AI Triage & Sign-off</small>
+        </div>
+      </button>
+    </nav>
+    
+    <div class="header-meta">
+      <div class="itwin-pill">
+        <span class="itwin-label">iTwin:</span>
+        <span class="itwin-val" id="currentITwinId">proj-hudson-tunnel-001</span>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="openSettingsModal()" style="background:#6c757d; color:white; border:none; margin-right:10px;" title="AI Settings">
+        ⚙️ Settings
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="handleCleanAllTickets()" style="background:#dc3545; color:white; border:none; margin-right:10px;" title="Delete all form instances">
+        🗑️ Clean All Tickets
+      </button>
+      <a href="/swagger" target="_blank" class="swagger-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        Swagger API
+      </a>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <!-- ============================================== -->
+    <!-- VIEW 1: FIELD INSPECTOR (CAPTURE & SUBMIT)     -->
+    <!-- ============================================== -->
+    <div id="viewField" class="persona-view active">
+      
+      <!-- Role Context Banner -->
+      <section class="role-banner role-banner-field">
+        <div class="role-badge">📱 FIELD CAPTURE MODE (SYNCHRO Field)</div>
+        <h2>Site Observation & Defect Capture</h2>
+        <p>Field workers capture on-site reality. You can create a draft form using <strong>AI Voice/Note Extraction</strong> or <strong>Manual Entry</strong>, review the draft, and <strong>Submit for Engineering Review</strong>. Once submitted, the form is locked from further field tampering.</p>
+      </section>
+
+      <!-- Form Intake Section (Dual-Mode) -->
+      <section class="card intake-card">
+        <div class="intake-tabs">
+          <button class="tab-btn active" id="tabAiBtn" onclick="switchIntakeTab('ai')">
+            <span class="tab-icon">🤖</span>
+            <strong>Mode A: AI Voice / Field Note</strong>
+            <span class="tab-badge">AI-Assisted</span>
+          </button>
+          <button class="tab-btn" id="tabManualBtn" onclick="switchIntakeTab('manual')">
+            <span class="tab-icon">✍️</span>
+            <strong>Mode B: Manual Form Entry</strong>
+            <span class="tab-badge">Standard POST</span>
+          </button>
+        </div>
+
+        <!-- Mode A: AI-Assisted Intake -->
+        <div id="aiIntakePanel" class="tab-panel active">
+          <div class="ai-prompt-box">
+            <label class="input-label">
+              Field Audio / Unstructured Site Observation Note:
+              <span class="label-hint">Paste dictation or click a real-world infrastructure preset</span>
+            </label>
+
+            <div class="sample-chips">
+              <span class="chip-label">Quick Scenarios:</span>
+              <button class="chip" onclick="loadSamplePrompt('concrete')">
+                🏗️ Pier 4 Concrete Spalling & Leakage
+              </button>
+              <button class="chip" onclick="loadSamplePrompt('excavation')">
+                ⚠️ Zone B Deep Trench Shoring Hazard
+              </button>
+            </div>
+
+            <div style="position: relative;">
+              <textarea id="aiInputText" rows="4" placeholder="Speak or enter field observations here... (e.g. 'Found 5-inch deep spalling on Pier 4 east face, rebar exposed and rusting with water seepage. Halted concrete pour on Bay 2 immediately.')" style="width: 100%; box-sizing: border-box; padding-right: 40px;"></textarea>
+              <button id="btnDictate" type="button" onclick="toggleDictation()" style="position: absolute; right: 10px; bottom: 15px; background: none; border: none; font-size: 22px; cursor: pointer; color: #6c757d; padding: 0;" title="Click to start/stop dictation">
+                🎤
+              </button>
+            </div>
+
+            <div class="ai-actions-bar">
+              <button class="btn btn-primary" id="btnExtractAi" onclick="handleAiExtractAndCreate()">
+                <span class="btn-icon">⚡</span> Extract Fields & Create Draft Form
+              </button>
+
+              <span id="aiStatusText" class="status-msg"></span>
+            </div>
+          </div>
+
+          <div id="aiExtractionResultCard" class="ai-result-card hidden">
+            <div class="ai-result-header">
+              <div>
+                <span class="badge badge-ai">AI Extracted</span>
+                <strong id="aiMatchedDefName">Template Name</strong>
+                <span class="confidence-pill" id="aiConfidenceBadge">Confidence: 96%</span>
+                <span class="badge" id="aiModelBadge" style="background:#e8f0fe; color:#1a73e8; border:1px solid #c2e7ff; margin-left:6px; font-size:11px;">Model</span>
+              </div>
+              <span class="result-form-id" id="aiCreatedFormId">Form ID</span>
+            </div>
+            <p class="ai-summary-text" id="aiSummaryText"></p>
+            <div class="extracted-properties-grid" id="aiExtractedPropsGrid"></div>
+          </div>
+        </div>
+
+        <!-- Mode B: Manual Entry Intake -->
+        <div id="manualIntakePanel" class="tab-panel">
+          <div class="manual-template-select">
+            <label class="input-label">Select Form Definition (Template):</label>
+            <select id="selectFormDefinition" class="form-control" onchange="renderManualFormFields()">
+              <option value="">-- Loading templates... --</option>
+            </select>
+          </div>
+
+          <form id="manualFormContainer" class="dynamic-form-grid" onsubmit="handleManualFormSubmit(event)">
+            <div class="loading-placeholder">Select a template to generate form fields...</div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Field Forms List (Focus on Draft & Submitted) -->
+      <section class="card forms-card">
+        <div class="card-header-row">
+          <div>
+            <h3>My Field Inspections</h3>
+            <p class="card-subtitle">Review your draft forms and submit them to the engineering office.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="loadProjectForms()">🔄 Refresh</button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Form ID</th>
+                <th>Template / Type</th>
+                <th>Subject</th>
+                <th>Status</th>
+                <th>Source</th>
+                <th>Created</th>
+                <th>Field Action</th>
+              </tr>
+            </thead>
+            <tbody id="fieldFormsTableBody">
+              <tr><td colspan="7" class="table-loading">Loading field forms...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- VIEW 2: OFFICE / ADMIN REVIEW (AI TRIAGE & SIGN-OFF) -->
+    <!-- ============================================== -->
+    <div id="viewOffice" class="persona-view">
+      
+      <!-- Role Context Banner -->
+      <section class="role-banner role-banner-office">
+        <div class="role-badge role-badge-office">🖥️ OFFICE & LEAD REVIEW MODE (SYNCHRO Control)</div>
+        <h2>Engineering Queue & AI Governance</h2>
+        <p>Project Managers, Lead Structural Engineers, and Safety Directors review submitted field reports. Use the <strong>AI Triage Engine</strong> to detect high-severity OSHA and structural risks, execute state machine escalations, and issue final approvals.</p>
+      </section>
+
+      <!-- Office Review Queue -->
+      <section class="card forms-card">
+        <div class="card-header-row">
+          <div>
+            <h3>Engineering Review Queue (`GET /forms`)</h3>
+            <p class="card-subtitle">Prioritized incoming reports awaiting triage, structural review, or sign-off.</p>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-secondary btn-sm" onclick="loadProjectForms()">🔄 Refresh Queue</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Form ID</th>
+                <th>Template / Type</th>
+                <th>Subject</th>
+                <th>Status (State Machine)</th>
+                <th>Source</th>
+                <th>Created</th>
+                <th>Office Action</th>
+              </tr>
+            </thead>
+            <tbody id="officeFormsTableBody">
+              <tr><td colspan="7" class="table-loading">Loading office queue...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Form Details & State Machine Workflow Modal -->
+  <div id="formDetailModal" class="modal-backdrop hidden">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div>
+          <h3 id="modalSubject">Form Details</h3>
+          <span class="modal-sub" id="modalMeta">ID: form-1234 • Status: Draft</span>
+        </div>
+        <button class="close-btn" onclick="closeDetailModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- Workflow Stage Bar -->
+        <div class="workflow-stage-bar" id="modalWorkflowStageBar"></div>
+
+        <!-- AI Triage & Governance Panel (Shown ONLY in Office Review Mode!) -->
+        <div class="triage-panel" id="modalTriagePanel">
+          <div class="triage-header">
+            <div class="triage-title">
+              <span class="triage-icon">🛡️</span>
+              <div>
+                <strong>Office AI Safety & Structural Triage</strong>
+                <p>Autonomous risk classification & state advancement recommendation for engineering leads.</p>
+              </div>
+            </div>
+            <div>
+              <button class="btn btn-warning btn-sm" id="btnRunTriage" onclick="handleRunAiTriage()">
+                ⚡ Run AI Triage
+              </button>
+            </div>
+          </div>
+          <div id="triageResultBox" class="triage-result hidden"></div>
+        </div>
+
+        <!-- Field Worker Notice (Shown in Field Mode if form is submitted/locked) -->
+        <div class="field-locked-notice hidden" id="modalFieldLockedNotice">
+          🔒 <strong>Inspection Submitted & Locked:</strong> This form has been submitted to the Engineering Office. Field editing is restricted to prevent tampering while under review.
+        </div>
+
+        <!-- Properties Grid -->
+        <div class="modal-section">
+          <h4>Inspection Field Properties</h4>
+          <div class="properties-viewer" id="modalPropertiesViewer"></div>
+        </div>
+
+        <!-- Workflow Transitions -->
+        <div class="modal-section">
+          <h4 id="transitionSectionTitle">Workflow State Actions</h4>
+          <p class="section-hint" id="transitionSectionHint">Authorized transitions governed by the state machine.</p>
+          <div class="transition-buttons-row" id="modalTransitionButtons"></div>
+          <div id="transitionErrorBox" class="error-banner hidden"></div>
+        </div>
+
+        <!-- Audit Trail -->
+        <div class="modal-section">
+          <h4>Audit Trail & Regulatory Provenance</h4>
+          <div class="audit-timeline" id="modalAuditTimeline"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Settings Modal -->
+  <div id="settingsModal" class="modal-backdrop hidden">
+    <div class="modal-window" style="max-width:500px;">
+      <div class="modal-header">
+        <h3 style="margin:0;">⚙️ AI Settings</h3>
+        <button class="close-btn" onclick="closeSettingsModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom:15px;">
+          <label style="display:block; font-weight:600; margin-bottom:5px;">Groq API Key</label>
+          <input type="password" id="settingGroqKey" class="form-control" placeholder="gsk_..." style="width:100%;">
+          <small style="color:#6c757d;">Used for openai/ and qwen/ models</small>
+        </div>
+        <div style="margin-bottom:15px;">
+          <label style="display:block; font-weight:600; margin-bottom:5px;">Google API Key</label>
+          <input type="password" id="settingGoogleKey" class="form-control" placeholder="AIza..." style="width:100%;">
+          <small style="color:#6c757d;">Used for gemini- models</small>
+        </div>
+        <div style="margin-bottom:15px;">
+          <label style="display:block; font-weight:600; margin-bottom:5px;">Default LLM Model</label>
+          <select id="settingDefaultModel" class="form-control" style="width:100%;">
+            <optgroup label="⚡ Groq Ultra-Fast">
+              <option value="openai/gpt-oss-120b">openai/gpt-oss-120b (120B High-Accuracy)</option>
+              <option value="openai/gpt-oss-20b">openai/gpt-oss-20b (Fast & Lightweight)</option>
+              <option value="qwen/qwen3.8-27b">qwen/qwen3.8-27b (Qwen 3.8 27B)</option>
+              <option value="allam-2-7b">allam-2-7b (Allam 7B)</option>
+            </optgroup>
+            <optgroup label="🌐 Google Gemini Models">
+              <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash Lite</option>
+              <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite</option>
+              <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</option>
+              <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+              <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
+              <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+              <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
+              <option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
+              <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
+            </optgroup>
+          </select>
+        </div>
+        <div style="margin-bottom:20px; display:flex; align-items:center; gap:8px;">
+          <input type="checkbox" id="settingEnableFallback" style="width:16px; height:16px;">
+          <label for="settingEnableFallback" style="margin:0; font-weight:600;">Enable Fallback to Heuristic Engine</label>
+        </div>
+        <div style="text-align:right;">
+          <button class="btn btn-secondary" onclick="closeSettingsModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=12"></script>
+</body>
+</html>

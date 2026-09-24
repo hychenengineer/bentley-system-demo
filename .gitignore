@@ -1,0 +1,25 @@
+# Crawler & Scraping artifacts (kept local only)
+bentley_archive/
+crawl_bentley.py
+homepage.html
+*.py
+
+# .NET Build outputs
+bin/
+obj/
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+
+# SQLite Database (will auto-create and seed on startup)
+*.db
+*.db-shm
+*.db-wal
+**/*.db
+**/*.db-shm
+**/*.db-wal
+
+# OS Files
+.DS_Store
+Thumbs.db
