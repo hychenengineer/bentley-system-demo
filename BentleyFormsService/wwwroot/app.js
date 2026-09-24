@@ -37,21 +37,42 @@ async function loadFormDefinitions() {
     if (!res.ok) throw new Error("Failed to load definitions");
     formDefinitions = await res.json();
 
+    // 1. Populate Mode B (Manual Form Entry dropdown)
     const select = document.getElementById("selectFormDefinition");
-    select.innerHTML = '<option value="">-- Choose a Form Template --</option>';
-    formDefinitions.forEach(def => {
-      const opt = document.createElement("option");
-      opt.value = def.id;
-      opt.textContent = `${def.displayName} (${def.workflowType})`;
-      select.appendChild(opt);
-    });
+    if (select) {
+      select.innerHTML = '<option value="">-- Choose a Form Template --</option>';
+      formDefinitions.forEach(def => {
+        const opt = document.createElement("option");
+        opt.value = def.id;
+        opt.textContent = `${def.displayName} (${def.workflowType})`;
+        select.appendChild(opt);
+      });
 
-    if (formDefinitions.length > 0) {
-      select.value = formDefinitions[0].id;
-      renderManualFormFields();
+      if (formDefinitions.length > 0) {
+        select.value = formDefinitions[0].id;
+        renderManualFormFields();
+      }
+    }
+
+    // 2. Populate Mode A (AI Active Definitions banner)
+    const bannerList = document.getElementById("aiActiveTemplatesList");
+    const countBadge = document.getElementById("activeDefCountBadge");
+    if (bannerList) {
+      bannerList.innerHTML = "";
+      if (countBadge) countBadge.textContent = `${formDefinitions.length} Schemas Injected`;
+
+      formDefinitions.forEach(def => {
+        const pill = document.createElement("div");
+        pill.style.cssText = "background:#fff; border:1px solid #cbd5e1; border-radius:6px; padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 2px rgba(0,0,0,0.05);";
+        const icon = def.id.includes("concrete") ? "🏗️" : "⚠️";
+        pill.innerHTML = `<strong>${icon} ${escapeHtml(def.displayName)}</strong> <span style="color:#64748b; font-size:11px;">(${def.fields?.length || 0} fields • ${escapeHtml(def.workflowType)})</span>`;
+        bannerList.appendChild(pill);
+      });
     }
   } catch (err) {
     console.error("Error loading definitions:", err);
+    const countBadge = document.getElementById("activeDefCountBadge");
+    if (countBadge) countBadge.textContent = "Error loading";
   }
 }
 

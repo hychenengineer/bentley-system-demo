@@ -94,6 +94,19 @@
 
         <!-- Mode A: AI-Assisted Intake -->
         <div id="aiIntakePanel" class="tab-panel active">
+          <!-- Active Form Definitions Catalog Banner -->
+          <div class="active-definitions-banner" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px; margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:12px; font-weight:700; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">
+                📋 Active Project Form Definitions (iTwin Schema Context):
+              </span>
+              <span id="activeDefCountBadge" class="badge" style="background:#e2e8f0; color:#334155; font-size:11px;">Loading...</span>
+            </div>
+            <div id="aiActiveTemplatesList" style="display:flex; gap:8px; flex-wrap:wrap;">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
           <div class="ai-prompt-box">
             <label class="input-label">
               Field Audio / Unstructured Site Observation Note:
@@ -353,6 +366,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=12"></script>
+  <script src="app.js?v=13"></script>
 </body>
 </html>
