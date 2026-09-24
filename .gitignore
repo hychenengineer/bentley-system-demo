@@ -7,8 +7,10 @@ homepage.html
 # .NET Build outputs
 bin/
 obj/
+publish/
 **/bin/
 **/obj/
+**/publish/
 **/.vs/
 **/.vscode/
 
