@@ -224,6 +224,13 @@ async function handleAiExtractAndCreate() {
       activeApiKey = localStorage.getItem("google_api_key");
     }
 
+    if (!activeApiKey && !enableFallback) {
+      statusEl.innerHTML = `<span style="color:#d9534f; font-weight:600;">⚠️ API Key Missing: You need an API key from Groq or Google Gemini in <a href="javascript:void(0)" onclick="openSettingsModal()" style="text-decoration:underline;">⚙️ Settings</a>, or please turn on <em>"Enable Fallback to Heuristic Engine"</em> under Settings.</span>`;
+      btn.disabled = false;
+      clearTimeout(timeoutTimer);
+      return;
+    }
+
     const res = await fetch("/forms/ai/extract-and-create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -609,6 +616,13 @@ async function handleRunAiTriage() {
       activeApiKey = localStorage.getItem("groq_api_key");
     } else if (triageModel.startsWith("gemini-")) {
       activeApiKey = localStorage.getItem("google_api_key");
+    }
+
+    if (!activeApiKey && !enableFallback) {
+      alert("⚠️ API Key Missing: You need an API key from either Groq or Google Gemini in ⚙️ Settings, or please turn on 'Enable Fallback to Heuristic Engine' under Settings to test offline.");
+      btn.disabled = false;
+      btn.textContent = "⚡ Run AI Triage";
+      return;
     }
 
     const res = await fetch(`/forms/${activeForm.id}/ai/triage`, {

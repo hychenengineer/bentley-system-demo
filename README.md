@@ -7,6 +7,12 @@
 
 📦 **[Download Standalone Windows App (.zip)](https://github.com/hychenengineer/bentley-system-demo/releases/download/v1.0.0/bentley-system-demo-win-x64.zip)** — *No .NET installation required. Extract and double-click `Start-Demo.bat` to launch on http://localhost:5088.*
 
+> [!IMPORTANT]
+> **🔑 API Key Requirement & Offline Fallback Mode:**
+> You need an API key from either **[Groq](https://console.groq.com)** (ultra-fast, free tier available) or **[Google AI Studio](https://aistudio.google.com)** (Gemini) in order to use the full LLM extraction and safety triage capabilities.
+> 
+> **Testing without an API Key?** Open the **⚙️ Settings** modal in the UI and turn on **"Enable Fallback to Heuristic Engine"**. This allows the system to extract and auto-create structured forms offline using the built-in deterministic civil domain heuristic engine without requiring any external LLM credentials!
+
 An intelligent, cloud-native form management and workflow execution service built to bridge the gap between **unstructured site reality** (noisy field voice dictations, mobile notes) and **rigid engineering data structures & regulatory state machines** (Bentley iTwin, SYNCHRO Field, and SYNCHRO Control).
 
 ---
